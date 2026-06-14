@@ -1,0 +1,32 @@
+<main class="min-h-screen bg-[color:var(--theme-bg)] text-[color:var(--theme-text)]">
+  <div class="relative isolate min-h-screen overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-[var(--theme-page-gradient)]"></div>
+    <div class="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 px-5 py-8 sm:px-8 lg:px-10">
+      <app-cards-header
+        title="Browse the catalog"
+        subtitle="The spreadsheet seed is now driving the UI, so the browser reflects the real card sets, values, and notes."
+        [statusLabel]="statusLabel()"
+        [statusValue]="statusValue()"
+        [statusHelper]="statusHelper()"
+        [sets]="sets()"
+      />
+
+      <app-set-filter-bar
+        [sets]="sets()"
+        [selectedSetCode]="activeSetCode()"
+        (setSelected)="selectSet($event)"
+      />
+
+      <app-cards-grid [cards]="cards()" [loading]="loading()" [error]="error()" />
+
+      <app-pagination-controls
+        [page]="page()"
+        [totalPages]="totalPages()"
+        [loading]="loading()"
+        (previous)="previousPage()"
+        (next)="nextPage()"
+        (pageSelected)="goToPage($event)"
+      />
+    </div>
+  </div>
+</main>

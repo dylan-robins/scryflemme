@@ -1,6 +1,8 @@
 import cors from 'cors';
 import express from 'express';
 
+import { getCardsPageFromQuery } from './cards.js';
+
 export const getHealthPayload = () => ({
   ok: true,
   service: 'backend',
@@ -23,6 +25,10 @@ export const createApp = () => {
 
   app.get('/api/hello', (_request, response) => {
     response.json(getHelloPayload());
+  });
+
+  app.get('/api/cards', (request, response) => {
+    response.json(getCardsPageFromQuery(request.query));
   });
 
   return app;

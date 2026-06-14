@@ -17,6 +17,22 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use `NgOptimizedImage` for all static images.
   - `NgOptimizedImage` does not work for inline base64 images.
 
+## Source Tree
+
+- Organize feature code under `src/app/features/<feature-name>/`.
+- Use the following subfolders for each feature when they apply:
+  - `data-access/` for API services, facades, and remote-state helpers
+  - `models/` for feature-specific types and contracts
+  - `ui/` for reusable presentational components within the feature
+  - `pages/` for route-level containers
+- Keep cross-feature primitives under `src/app/shared/`.
+  - Use `shared/ui/` for app-wide atoms like pills, badges, metric cards, and generic controls
+  - Use `shared/util/` for pure helpers
+  - Use `shared/layout/` for app-wide shells and structure
+- Keep route entry points thin. Route files should lazy-load a page component, not a whole feature folder.
+- Avoid adding new top-level folders under `src/app/` unless there is a clear cross-cutting reason.
+- Prefer moving code into the smallest folder that matches its scope instead of growing flat feature directories.
+
 ## Accessibility Requirements
 
 - It MUST pass all AXE checks.
