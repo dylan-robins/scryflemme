@@ -1,0 +1,26 @@
+{
+  "name": "scryflemme",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "yarn@4.6.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "backend:dev": "yarn workspace @scryflemme/backend dev",
+    "backend:build": "yarn workspace @scryflemme/backend build",
+    "backend:test": "yarn workspace @scryflemme/backend test",
+    "backend:typecheck": "yarn workspace @scryflemme/backend typecheck",
+    "frontend:dev": "yarn workspace @scryflemme/frontend dev",
+    "frontend:build": "yarn workspace @scryflemme/frontend build",
+    "frontend:test": "yarn workspace @scryflemme/frontend test",
+    "frontend:typecheck": "yarn workspace @scryflemme/frontend typecheck",
+    "dev": "concurrently -n backend,frontend -c blue,magenta \"yarn backend:dev\" \"yarn frontend:dev\"",
+    "build": "yarn backend:build && yarn frontend:build",
+    "typecheck": "yarn backend:typecheck && yarn frontend:typecheck",
+    "test": "yarn backend:test && yarn frontend:test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

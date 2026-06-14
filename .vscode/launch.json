@@ -1,0 +1,29 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "frontend: dev",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "frontend: dev",
+      "url": "http://localhost:4200/"
+    },
+    {
+      "name": "frontend: test",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "frontend: test",
+      "url": "http://localhost:9876/debug.html"
+    },
+    {
+      "name": "backend: dev",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--inspect", "--watch", "--import", "tsx"],
+      "program": "${workspaceFolder}/apps/backend/src/index.ts",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

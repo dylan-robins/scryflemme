@@ -1,0 +1,38 @@
+<main class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="relative isolate overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_36%),radial-gradient(circle_at_80%_20%,_rgba(244,114,182,0.14),_transparent_28%),linear-gradient(180deg,_#020617_0%,_#0f172a_100%)]"></div>
+    <div class="mx-auto flex min-h-screen max-w-5xl items-center px-6 py-16 sm:px-10 lg:px-12">
+      <section class="w-full max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-sky-950/30 backdrop-blur sm:p-10">
+        <div class="flex items-center gap-3 text-sm font-medium uppercase tracking-[0.3em] text-sky-300">
+          <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+          Frontend connected
+        </div>
+
+        <h1 class="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+          Angular frontend
+          <span class="block text-sky-300">talking to Express</span>
+        </h1>
+
+        <p class="mt-5 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
+          This view calls <code class="rounded bg-white/10 px-1.5 py-0.5 text-sky-200">/api/hello</code>
+          through the monorepo proxy and renders the response below.
+        </p>
+
+        @if (hello$ | async; as hello) {
+          <div class="mt-8 rounded-2xl border border-sky-400/20 bg-slate-900/70 p-6">
+            <div class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-300">
+              API response
+            </div>
+            <p class="mt-3 text-2xl font-medium text-white sm:text-3xl">
+              {{ hello.message }}
+            </p>
+          </div>
+        } @else {
+          <div class="mt-8 rounded-2xl border border-sky-400/20 bg-slate-900/70 p-6">
+            <div class="animate-pulse text-sm text-slate-400">Loading backend greeting...</div>
+          </div>
+        }
+      </section>
+    </div>
+  </div>
+</main>
