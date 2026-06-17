@@ -3128,6 +3128,7 @@ __metadata:
     "@angular/router": "npm:^22.0.0"
     "@scryflemme/types": "workspace:*"
     "@tailwindcss/postcss": "npm:^4.1.12"
+    angular-auth-oidc-client: "npm:^21.0.2"
     jsdom: "npm:^28.0.0"
     postcss: "npm:^8.5.3"
     prettier: "npm:^3.8.1"
@@ -3735,6 +3736,21 @@ __metadata:
     "@algolia/requester-fetch": "npm:5.52.0"
     "@algolia/requester-node-http": "npm:5.52.0"
   checksum: 10c0/ba5755979c01137f969e7225357f2d10593bf8c3dd2c653c0c685ccfbbd992f07ff8526c6e246972c32da9ea3c894396d544e33f538836e72268a2ffea6d980d
+  languageName: node
+  linkType: hard
+
+"angular-auth-oidc-client@npm:^21.0.2":
+  version: 21.0.2
+  resolution: "angular-auth-oidc-client@npm:21.0.2"
+  dependencies:
+    rfc4648: "npm:^1.5.0"
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": ">=20.0.0"
+    "@angular/core": ">=20.0.0"
+    "@angular/router": ">=20.0.0"
+    rxjs: ^6.5.3 || ^7.4.0
+  checksum: 10c0/8a80b72443a88b97a90a95516adeb0a1dd86741950a0cf72e7cb625205c4c231ada12698361f0e16146ea8ab4b7102ca40c71f974f84749d3b6ca88e0d8c3f18
   languageName: node
   linkType: hard
 
@@ -6977,6 +6993,13 @@ __metadata:
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
   checksum: 10c0/59933e8501727ba13ad73ef4a04d5280b3717fd650408460c987392efe9d7be2040778ed8ebe933c5cbd63da3dcc37919c141ef8af0a54a6e4fca5a2af177bfe
+  languageName: node
+  linkType: hard
+
+"rfc4648@npm:^1.5.0":
+  version: 1.5.4
+  resolution: "rfc4648@npm:1.5.4"
+  checksum: 10c0/8683e82ed9c3cb23844720d04eaeee12025146bfdfdf250b1cce80d56e16c6431530ba3033cbb0e7ca3a25223107847f14c6cac11a255ea7d219dc7ba11cd43d
   languageName: node
   linkType: hard
 

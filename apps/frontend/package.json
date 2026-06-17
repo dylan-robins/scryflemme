@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@scryflemme/types": "workspace:*",
+    "angular-auth-oidc-client": "^21.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
