@@ -1,13 +1,28 @@
-# scryflemme
+# Scryflemme
 
-Monorepo starter with:
+[![Tests](https://github.com/dylan-robins/scryflemme/actions/workflows/tests.yml/badge.svg)](https://github.com/dylan-robins/scryflemme/actions/workflows/tests.yml)
+[![Docs](https://github.com/dylan-robins/scryflemme/actions/workflows/docs.yml/badge.svg)](https://github.com/dylan-robins/scryflemme/actions/workflows/docs.yml)
 
-- `apps/backend`: Express API
-- `apps/frontend`: Angular app
-- `apps/types`: Shared API contract types for both apps
-- `docs`: `uv`-managed documentation workspace
+Monorepo for the Scryflemme card browser, with:
 
-## Development
+- `apps/backend`: Express API, Prisma, and backend-owned auth
+- `apps/frontend`: Angular UI and Logto login flow
+- `apps/types`: shared API contract types
+- `docs`: Zensical-powered developer documentation
+
+[Documentation](https://dylan-robins.github.io/scryflemme/)
+
+## What This Is
+
+The app currently serves three core purposes:
+
+1. browse the card catalog
+2. authenticate users through Logto
+3. link each signed-in user to a local database record
+
+The backend is the source of truth for user identity and application data.
+
+## Quick Start
 
 ```bash
 corepack enable
@@ -15,29 +30,50 @@ yarn install
 yarn dev
 ```
 
-The backend listens on `http://localhost:3000`.
-The frontend listens on `http://localhost:4200`.
+That starts:
 
-The frontend proxies `/api/*` requests to the backend in local development.
+- backend on `http://localhost:3000`
+- frontend on `http://localhost:4200`
+
+The frontend proxies `/api/*` requests to the backend during local development.
 
 ## Documentation
 
-The docs workspace lives in `docs/` and is intended to be built with `uv` plus Zensical.
+The docs workspace lives in `docs/` and is built with `uv` plus Zensical.
 
 ```bash
 cd docs
 uv sync
-uv run zensical --help
+uv run zensical build
+```
+
+## Repository Layout
+
+- `apps/backend/src`: backend source
+- `apps/backend/prisma`: schema, migrations, and seed data
+- `apps/frontend/src`: frontend source
+- `apps/types/src`: shared types
+- `docs/content`: developer documentation source
+
+## Common Commands
+
+```bash
+yarn build
+yarn test
+yarn typecheck
+```
+
+Workspace-specific commands:
+
+```bash
+yarn backend:dev
+yarn backend:test
+yarn frontend:dev
+yarn frontend:test
 ```
 
 ## Shared Types
 
-The `@scryflemme/types` workspace package is the single source of truth for API contracts shared
-between the backend and frontend.
+`@scryflemme/types` is the single source of truth for API contracts shared between the frontend and backend.
 
-Useful scripts:
-
-```bash
-yarn types:typecheck
-yarn typecheck
-```
+If you change a request or response shape, update the shared types first and then adjust both callers.

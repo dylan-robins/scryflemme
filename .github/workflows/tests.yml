@@ -1,0 +1,80 @@
+name: Tests
+
+on:
+  pull_request:
+    paths:
+      - 'tsconfig.base.json'
+      - 'package.json'
+      - '.yarnrc.yml'
+      - 'yarn.lock'
+      - 'apps/**'
+      - '.github/workflows/tests.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'tsconfig.base.json'
+      - 'package.json'
+      - '.yarnrc.yml'
+      - 'yarn.lock'
+      - 'apps/**'
+      - '.github/workflows/tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Run backend typechecking
+        run: yarn backend:typecheck
+
+      - name: Run backend tests
+        run: yarn backend:test
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Run frontend typechecking
+        run: yarn frontend:typecheck
+
+      - name: Run frontend tests
+        run: yarn frontend:test
