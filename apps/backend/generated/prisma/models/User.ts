@@ -36,18 +36,21 @@ export type UserSumAggregateOutputType = {
 
 export type UserMinAggregateOutputType = {
   userID: number | null
+  logtoSubject: string | null
   email: string | null
   name: string | null
 }
 
 export type UserMaxAggregateOutputType = {
   userID: number | null
+  logtoSubject: string | null
   email: string | null
   name: string | null
 }
 
 export type UserCountAggregateOutputType = {
   userID: number
+  logtoSubject: number
   email: number
   name: number
   _all: number
@@ -64,18 +67,21 @@ export type UserSumAggregateInputType = {
 
 export type UserMinAggregateInputType = {
   userID?: true
+  logtoSubject?: true
   email?: true
   name?: true
 }
 
 export type UserMaxAggregateInputType = {
   userID?: true
+  logtoSubject?: true
   email?: true
   name?: true
 }
 
 export type UserCountAggregateInputType = {
   userID?: true
+  logtoSubject?: true
   email?: true
   name?: true
   _all?: true
@@ -169,7 +175,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   userID: number
-  email: string
+  logtoSubject: string
+  email: string | null
   name: string | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -198,31 +205,35 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   userID?: Prisma.IntFilter<"User"> | number
-  email?: Prisma.StringFilter<"User"> | string
+  logtoSubject?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringNullableFilter<"User"> | string | null
   decks?: Prisma.DeckListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   userID?: Prisma.SortOrder
-  email?: Prisma.SortOrder
+  logtoSubject?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   decks?: Prisma.DeckOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   userID?: number
+  logtoSubject?: string
   email?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringNullableFilter<"User"> | string | null
   decks?: Prisma.DeckListRelationFilter
-}, "userID" | "email">
+}, "userID" | "logtoSubject" | "email">
 
 export type UserOrderByWithAggregationInput = {
   userID?: Prisma.SortOrder
-  email?: Prisma.SortOrder
+  logtoSubject?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -236,55 +247,64 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   userID?: Prisma.IntWithAggregatesFilter<"User"> | number
-  email?: Prisma.StringWithAggregatesFilter<"User"> | string
+  logtoSubject?: Prisma.StringWithAggregatesFilter<"User"> | string
+  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
-  email: string
+  logtoSubject: string
+  email?: string | null
   name?: string | null
   decks?: Prisma.DeckCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   userID?: number
-  email: string
+  logtoSubject: string
+  email?: string | null
   name?: string | null
   decks?: Prisma.DeckUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logtoSubject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decks?: Prisma.DeckUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   userID?: Prisma.IntFieldUpdateOperationsInput | number
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logtoSubject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decks?: Prisma.DeckUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   userID?: number
-  email: string
+  logtoSubject: string
+  email?: string | null
   name?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logtoSubject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
   userID?: Prisma.IntFieldUpdateOperationsInput | number
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logtoSubject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
   userID?: Prisma.SortOrder
+  logtoSubject?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
 }
@@ -295,12 +315,14 @@ export type UserAvgOrderByAggregateInput = {
 
 export type UserMaxOrderByAggregateInput = {
   userID?: Prisma.SortOrder
+  logtoSubject?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   userID?: Prisma.SortOrder
+  logtoSubject?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
 }
@@ -329,13 +351,15 @@ export type UserUpdateOneRequiredWithoutDecksNestedInput = {
 }
 
 export type UserCreateWithoutDecksInput = {
-  email: string
+  logtoSubject: string
+  email?: string | null
   name?: string | null
 }
 
 export type UserUncheckedCreateWithoutDecksInput = {
   userID?: number
-  email: string
+  logtoSubject: string
+  email?: string | null
   name?: string | null
 }
 
@@ -356,13 +380,15 @@ export type UserUpdateToOneWithWhereWithoutDecksInput = {
 }
 
 export type UserUpdateWithoutDecksInput = {
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logtoSubject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateWithoutDecksInput = {
   userID?: Prisma.IntFieldUpdateOperationsInput | number
-  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logtoSubject?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -399,6 +425,7 @@ export type UserCountOutputTypeCountDecksArgs<ExtArgs extends runtime.Types.Exte
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userID?: boolean
+  logtoSubject?: boolean
   email?: boolean
   name?: boolean
   decks?: boolean | Prisma.User$decksArgs<ExtArgs>
@@ -407,23 +434,26 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userID?: boolean
+  logtoSubject?: boolean
   email?: boolean
   name?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userID?: boolean
+  logtoSubject?: boolean
   email?: boolean
   name?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   userID?: boolean
+  logtoSubject?: boolean
   email?: boolean
   name?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userID" | "email" | "name", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userID" | "logtoSubject" | "email" | "name", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   decks?: boolean | Prisma.User$decksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -438,7 +468,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     userID: number
-    email: string
+    logtoSubject: string
+    email: string | null
     name: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -865,6 +896,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly userID: Prisma.FieldRef<"User", 'Int'>
+  readonly logtoSubject: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
 }

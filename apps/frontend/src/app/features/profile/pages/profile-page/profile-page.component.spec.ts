@@ -1,40 +1,37 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { of, throwError } from 'rxjs';
 
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 
+import { SessionApiService } from '../../../auth/data-access/session-api.service';
 import { ProfilePageComponent } from './profile-page.component';
 
 describe('ProfilePageComponent', () => {
-  const userData = signal({
-    userData: {
-      email: 'alex@example.com',
-      name: 'Alex Doe',
-      preferred_username: 'alex',
-      sub: 'user-123'
-    },
-    allUserData: []
-  });
-
   const authenticated = signal({
     isAuthenticated: true,
     allConfigsAuthenticated: []
   });
 
+  const oidcMock = {
+    authenticated
+  };
+
+  const sessionApiMock = {
+    getCurrentUser: () =>
+      of({
+        userID: 7,
+        logtoSubject: 'user-123',
+        email: 'ada@example.com',
+        name: 'Ada Lovelace'
+      })
+  };
+
   beforeEach(async () => {
     authenticated.set({
       isAuthenticated: true,
       allConfigsAuthenticated: []
-    });
-    userData.set({
-      userData: {
-        email: 'alex@example.com',
-        name: 'Alex Doe',
-        preferred_username: 'alex',
-        sub: 'user-123'
-      },
-      allUserData: []
     });
 
     await TestBed.configureTestingModule({
@@ -43,26 +40,25 @@ describe('ProfilePageComponent', () => {
         provideRouter([]),
         {
           provide: OidcSecurityService,
-          useValue: {
-            authenticated,
-            userData
-          }
+          useValue: oidcMock
+        },
+        {
+          provide: SessionApiService,
+          useValue: sessionApiMock
         }
       ]
     }).compileComponents();
   });
 
-  it('renders profile claims for an authenticated user', () => {
+  it('renders profile details from the backend user record', () => {
     const fixture = TestBed.createComponent(ProfilePageComponent);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-
-    expect(compiled.textContent).toContain('My profile');
-    expect(compiled.textContent).toContain('Alex Doe');
-    expect(compiled.textContent).toContain('Logged in with alex@example.com.');
-    expect(compiled.textContent).toContain('Email');
-    expect(compiled.textContent).toContain('alex@example.com');
+    expect(compiled.textContent).toContain('Ada Lovelace');
+    expect(compiled.textContent).toContain('ada@example.com');
+    expect(compiled.textContent).toContain('user-123');
+    expect(compiled.textContent).toContain('User ID');
   });
 
   it('shows a signed-out message when unauthenticated', () => {
@@ -76,5 +72,19 @@ describe('ProfilePageComponent', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain('You are not signed in');
+  });
+
+  it('shows an error when the backend session is rejected', () => {
+    TestBed.overrideProvider(SessionApiService, {
+      useValue: {
+        getCurrentUser: () => throwError(() => ({ status: 401 }))
+      }
+    });
+
+    const fixture = TestBed.createComponent(ProfilePageComponent);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Your backend session is not authorized');
   });
 });

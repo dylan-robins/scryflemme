@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { getCardsPageFromQuery } from './cards.js';
+import { AuthError, authenticateRequest, type AuthenticatedUser } from './auth/logto.js';
 
 export const getHealthPayload = () => ({
   ok: true,
@@ -12,6 +13,8 @@ export const getHealthPayload = () => ({
 export const getHelloPayload = () => ({
   message: 'Hello from Express'
 });
+
+export const getMePayload = (user: AuthenticatedUser) => user;
 
 export const createApp = () => {
   const app = express();
@@ -31,6 +34,21 @@ export const createApp = () => {
     void getCardsPageFromQuery(request.query)
       .then((payload) => response.json(payload))
       .catch(next);
+  });
+
+  app.get('/api/me', (request, response, next) => {
+    void authenticateRequest(request)
+      .then((user) => response.json(getMePayload(user)))
+      .catch((error: unknown) => {
+        if (error instanceof AuthError) {
+          response.status(error.statusCode).json({
+            error: error.message
+          });
+          return;
+        }
+
+        next(error);
+      });
   });
 
   return app;
