@@ -8,8 +8,6 @@ import type {
 
 import type { PrismaClient } from '../generated/prisma/client.js';
 
-export type CardsPrisma = Pick<PrismaClient, 'series' | 'card'>;
-
 const DEFAULT_PAGE_SIZE = 12;
 const MAX_PAGE_SIZE = 48;
 const CATALOG_EXTRACTED_AT = '2026-06-14T01:02:15+00:00';
@@ -61,7 +59,7 @@ const formatRarity = (rarity: string): string => {
   }
 };
 
-const loadCatalogFromDatabase = async (prisma: CardsPrisma): Promise<CardCatalog> => {
+const loadCatalogFromDatabase = async (prisma: PrismaClient): Promise<CardCatalog> => {
   const [seriesRows, cardRows] = await Promise.all([
     prisma.series.findMany({
       include: {
@@ -133,7 +131,7 @@ const loadCatalogFromDatabase = async (prisma: CardsPrisma): Promise<CardCatalog
 };
 
 export const getCardsPage = async (
-  prisma: CardsPrisma,
+  prisma: PrismaClient,
   page = 1,
   pageSize = DEFAULT_PAGE_SIZE,
   setCode: string | null = null
@@ -188,7 +186,7 @@ export const getCardsPageFromQuery = async (query: {
   page?: unknown;
   pageSize?: unknown;
   setCode?: unknown;
-}, prisma: CardsPrisma): Promise<CardsPage> => {
+}, prisma: PrismaClient): Promise<CardsPage> => {
   const page = parseIntegerQueryValue(query.page, 1, 1, Number.MAX_SAFE_INTEGER);
   const pageSize = parseIntegerQueryValue(query.pageSize, DEFAULT_PAGE_SIZE, 1, MAX_PAGE_SIZE);
   const setCode = Array.isArray(query.setCode) ? query.setCode[0] : query.setCode;

@@ -2,8 +2,6 @@ import type { Request } from 'express';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import type { PrismaClient } from '../../generated/prisma/client.js';
 
-export type AuthPrisma = Pick<PrismaClient, 'user'>;
-
 const DEFAULT_ISSUER = 'https://d1b3cj.logto.app/oidc';
 const DEFAULT_AUDIENCE = 'http://localhost:3000/api';
 const DISCOVERY_CACHE_TTL_MS = 10 * 60 * 1000;
@@ -199,7 +197,7 @@ const mergeClaims = (primary: JwtClaims, profile?: JwtClaims | null): CombinedUs
 };
 
 export const authenticateRequest = async (
-  prisma: AuthPrisma,
+  prisma: PrismaClient,
   request: Request
 ): Promise<AuthenticatedUser> => {
   const token = getBearerToken(request.headers.authorization);
@@ -242,7 +240,7 @@ export const authenticateRequest = async (
 };
 
 export const getUserFromClaims = async (
-  prisma: AuthPrisma,
+  prisma: PrismaClient,
   claims: JwtClaims
 ): Promise<AuthenticatedUser> => {
   const userData = mapClaimsToUserData(claims);

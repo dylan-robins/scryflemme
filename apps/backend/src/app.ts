@@ -5,8 +5,6 @@ import { getCardsPageFromQuery } from './cards.js';
 import { AuthError, authenticateRequest, type AuthenticatedUser } from './auth/logto.js';
 import type { PrismaClient } from '../generated/prisma/client.js';
 
-export type AppPrisma = Pick<PrismaClient, 'series' | 'card' | 'user'>;
-
 export const getHealthPayload = () => ({
   ok: true,
   service: 'backend',
@@ -19,7 +17,7 @@ export const getHelloPayload = () => ({
 
 export const getMePayload = (user: AuthenticatedUser) => user;
 
-export const createApp = (prisma: AppPrisma) => {
+export const createApp = (prisma: PrismaClient) => {
   const app = express();
 
   app.use(cors());

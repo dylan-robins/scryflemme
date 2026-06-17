@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import type { PrismaClient } from '../generated/prisma/client.js';
+
 const { mockCards, mockSeries, mockPrisma } = vi.hoisted(() => {
   const mockCards = Array.from({ length: 124 }, (_, index) => {
     const cardNumber = String(index + 1).padStart(2, '0');
@@ -49,7 +51,7 @@ const { mockCards, mockSeries, mockPrisma } = vi.hoisted(() => {
   return {
     mockCards,
     mockSeries,
-    mockPrisma
+    mockPrisma: mockPrisma as unknown as PrismaClient
   };
 });
 
