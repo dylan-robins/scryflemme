@@ -1,0 +1,6 @@
+[project]
+site_name = "ScryFlemme Developer Documentation"
+docs_dir = "./content"
+repo_url = "https://github.com/dylan-robins/scryflemme"
+repo_name = "dylan-robins/scryflemme"
+

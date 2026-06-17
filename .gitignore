@@ -3,6 +3,9 @@ dist
 coverage
 .angular
 .cache
+docs/.venv
+docs/.cache
+docs/site
 .DS_Store
 *.log
 .env

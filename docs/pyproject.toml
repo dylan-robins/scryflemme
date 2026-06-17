@@ -1,0 +1,11 @@
+[project]
+name = "scryflemme-docs"
+version = "0.1.0"
+description = "Documentation workspace for Scryflemme"
+requires-python = ">=3.12"
+dependencies = [
+  "zensical"
+]
+
+[tool.uv]
+default-groups = []
