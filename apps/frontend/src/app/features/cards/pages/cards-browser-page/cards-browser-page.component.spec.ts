@@ -50,7 +50,6 @@ describe('CardsBrowserPageComponent', () => {
           setLabel: 'Série 1',
           setName: "L'Aventure",
           number: '00',
-          rawNumber: '00 (x2)',
           copiesInProduct: 2,
           name: 'Esbroufe - Sac de sable',
           cardClass: 'N/A',
@@ -58,9 +57,7 @@ describe('CardsBrowserPageComponent', () => {
           type: null,
           archetype: null,
           rarity: 'Commune',
-          effect: null,
-          ownedClassic: false,
-          ownedGold: null
+          effect: null
         }
       ],
       activeSetCode: null,
@@ -114,7 +111,6 @@ describe('CardsBrowserPageComponent', () => {
           setLabel: 'Série 1',
           setName: "L'Aventure",
           number: '12',
-          rawNumber: '12',
           copiesInProduct: 1,
           name: 'Maingicienne',
           cardClass: 'Magie',
@@ -122,9 +118,7 @@ describe('CardsBrowserPageComponent', () => {
           type: null,
           archetype: null,
           rarity: 'Commune',
-          effect: 'Choisissez une carte Magie dans votre défausse et ajoutez-la à votre main.',
-          ownedClassic: false,
-          ownedGold: null
+          effect: 'Choisissez une carte Magie dans votre défausse et ajoutez-la à votre main.'
         }
       ],
       activeSetCode: null,
@@ -177,7 +171,6 @@ describe('CardsBrowserPageComponent', () => {
           setLabel: 'Série 2',
           setName: 'Découvertes magiques',
           number: '00',
-          rawNumber: '00',
           copiesInProduct: 1,
           name: 'Roi des bouquins',
           cardClass: 'Soutien',
@@ -185,9 +178,7 @@ describe('CardsBrowserPageComponent', () => {
           type: null,
           archetype: null,
           rarity: 'Rare',
-          effect: 'Piochez une carte supplémentaire.',
-          ownedClassic: false,
-          ownedGold: null
+          effect: 'Piochez une carte supplémentaire.'
         }
       ],
       activeSetCode: 'S2',

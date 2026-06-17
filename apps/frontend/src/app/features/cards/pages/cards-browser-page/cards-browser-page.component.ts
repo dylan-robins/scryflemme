@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 
 import { CardsApiService } from '../../data-access/cards-api.service';
-import type { CardRecord, CatalogMeta, CatalogSet } from '../../models/card.model';
+import type { CardRecord, CatalogMeta, CatalogSet } from '@scryflemme/types';
 import { CardsHeaderComponent } from '../../ui/cards-header.component';
 import { CardsGridComponent } from '../../ui/cards-grid.component';
 import { PaginationControlsComponent } from '../../ui/pagination-controls.component';

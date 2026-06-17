@@ -27,8 +27,10 @@ export const createApp = () => {
     response.json(getHelloPayload());
   });
 
-  app.get('/api/cards', (request, response) => {
-    response.json(getCardsPageFromQuery(request.query));
+  app.get('/api/cards', (request, response, next) => {
+    void getCardsPageFromQuery(request.query)
+      .then((payload) => response.json(payload))
+      .catch(next);
   });
 
   return app;

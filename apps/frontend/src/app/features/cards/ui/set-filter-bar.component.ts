@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 
-import type { CatalogSet } from '../models/card.model';
+import type { CatalogSet } from '@scryflemme/types';
 
 @Component({
   selector: 'app-set-filter-bar',

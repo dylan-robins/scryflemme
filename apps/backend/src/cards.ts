@@ -1,157 +1,16 @@
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import type {
+  CardCatalog,
+  CardRecord,
+  CardsPage,
+  CatalogMeta,
+  CatalogSet
+} from '@scryflemme/types';
 
-export interface CatalogMeta {
-  sourceFile: string;
-  extractedAt: string;
-  cardCount: number;
-  notes: string[];
-}
-
-export interface CatalogSet {
-  code: string;
-  label: string;
-  name: string;
-  uniqueCards: number;
-  totalCopiesInProduct: number;
-}
-
-export interface CardRecord {
-  id: string;
-  slug: string;
-  setCode: string;
-  setLabel: string;
-  setName: string;
-  number: string;
-  rawNumber: string;
-  copiesInProduct: number;
-  name: string;
-  cardClass: string;
-  value: number | string | null;
-  type: string | null;
-  archetype: string | null;
-  rarity: string;
-  effect: string | null;
-  ownedClassic: boolean;
-  ownedGold: boolean | null;
-}
-
-export interface CardCatalog {
-  meta: CatalogMeta;
-  sets: CatalogSet[];
-  cards: CardRecord[];
-}
-
-export interface CardsPage extends CardCatalog {
-  activeSetCode: string | null;
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
-}
+import { prisma } from './lib/prisma.js';
 
 const DEFAULT_PAGE_SIZE = 12;
 const MAX_PAGE_SIZE = 48;
-
-const cardsFileUrl = new URL('../src/data/seed.json', import.meta.url);
-const cardsFilePath = fileURLToPath(cardsFileUrl);
-
-const isStringArray = (value: unknown): value is string[] =>
-  Array.isArray(value) && value.every((entry) => typeof entry === 'string');
-
-const isCatalogMeta = (value: unknown): value is CatalogMeta => {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-
-  const candidate = value as Record<string, unknown>;
-
-  return (
-    typeof candidate.sourceFile === 'string' &&
-    typeof candidate.extractedAt === 'string' &&
-    typeof candidate.cardCount === 'number' &&
-    Number.isInteger(candidate.cardCount) &&
-    isStringArray(candidate.notes)
-  );
-};
-
-const isCatalogSet = (value: unknown): value is CatalogSet => {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-
-  const candidate = value as Record<string, unknown>;
-
-  return (
-    typeof candidate.code === 'string' &&
-    typeof candidate.label === 'string' &&
-    typeof candidate.name === 'string' &&
-    typeof candidate.uniqueCards === 'number' &&
-    Number.isInteger(candidate.uniqueCards) &&
-    typeof candidate.totalCopiesInProduct === 'number' &&
-    Number.isInteger(candidate.totalCopiesInProduct)
-  );
-};
-
-const isCardRecord = (value: unknown): value is CardRecord => {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-
-  const candidate = value as Record<string, unknown>;
-
-  return (
-    typeof candidate.id === 'string' &&
-    typeof candidate.slug === 'string' &&
-    typeof candidate.setCode === 'string' &&
-    typeof candidate.setLabel === 'string' &&
-    typeof candidate.setName === 'string' &&
-    typeof candidate.number === 'string' &&
-    typeof candidate.rawNumber === 'string' &&
-    typeof candidate.copiesInProduct === 'number' &&
-    Number.isInteger(candidate.copiesInProduct) &&
-    typeof candidate.name === 'string' &&
-    typeof candidate.cardClass === 'string' &&
-    (typeof candidate.value === 'number' ||
-      typeof candidate.value === 'string' ||
-      candidate.value === null) &&
-    (typeof candidate.type === 'string' || candidate.type === null) &&
-    (typeof candidate.archetype === 'string' || candidate.archetype === null) &&
-    typeof candidate.rarity === 'string' &&
-    (typeof candidate.effect === 'string' || candidate.effect === null) &&
-    typeof candidate.ownedClassic === 'boolean' &&
-    (typeof candidate.ownedGold === 'boolean' || candidate.ownedGold === null)
-  );
-};
-
-const loadCatalog = (): CardCatalog => {
-  const raw = readFileSync(cardsFilePath, 'utf-8');
-  const parsed: unknown = JSON.parse(raw);
-
-  if (typeof parsed !== 'object' || parsed === null) {
-    throw new Error(`Invalid catalog data in ${cardsFilePath}`);
-  }
-
-  const candidate = parsed as Record<string, unknown>;
-
-  if (
-    !isCatalogMeta(candidate.meta) ||
-    !Array.isArray(candidate.sets) ||
-    !candidate.sets.every(isCatalogSet) ||
-    !Array.isArray(candidate.cards) ||
-    !candidate.cards.every(isCardRecord)
-  ) {
-    throw new Error(`Invalid catalog data in ${cardsFilePath}`);
-  }
-
-  return {
-    meta: candidate.meta,
-    sets: candidate.sets,
-    cards: candidate.cards
-  };
-};
-
-export const catalog = loadCatalog();
+const CATALOG_EXTRACTED_AT = '2026-06-14T01:02:15+00:00';
 
 const clampPage = (page: number, totalPages: number): number => {
   if (totalPages === 0) {
@@ -169,9 +28,6 @@ const clampPageSize = (pageSize: number): number => {
   return Math.min(Math.max(Math.trunc(pageSize), 1), MAX_PAGE_SIZE);
 };
 
-const sortCardsById = (cards: CardRecord[]): CardRecord[] =>
-  [...cards].sort((left, right) => left.id.localeCompare(right.id, 'en', { numeric: true }));
-
 const normalizeSetCode = (setCode: string | null | undefined): string | null => {
   if (typeof setCode !== 'string') {
     return null;
@@ -182,11 +38,104 @@ const normalizeSetCode = (setCode: string | null | undefined): string | null => 
   return trimmed.length > 0 ? trimmed.toUpperCase() : null;
 };
 
-export const getCardsPage = (
+const sortCardsById = (cards: CardRecord[]): CardRecord[] =>
+  [...cards].sort((left, right) => left.id.localeCompare(right.id, 'en', { numeric: true }));
+
+const formatCardId = (setCode: string, number: number): string =>
+  `${setCode.toLowerCase()}-${String(number).padStart(2, '0')}`;
+
+const formatRarity = (rarity: string): string => {
+  switch (rarity) {
+    case 'COMMON':
+      return 'Commune';
+    case 'RARE':
+      return 'Rare';
+    case 'LEGENDARY':
+      return 'Légendaire';
+    case 'SECRET':
+      return 'Secrète';
+    default:
+      return rarity;
+  }
+};
+
+const loadCatalogFromDatabase = async (): Promise<CardCatalog> => {
+  const [seriesRows, cardRows] = await Promise.all([
+    prisma.series.findMany({
+      include: {
+        cards: {
+          select: {
+            copiesInProduct: true
+          }
+        }
+      },
+      orderBy: {
+        seriesID: 'asc'
+      }
+    }),
+    prisma.card.findMany({
+      include: {
+        series: {
+          select: {
+            code: true,
+            label: true,
+            name: true
+          }
+        }
+      }
+    })
+  ]);
+
+  const sets = seriesRows.map((series): CatalogSet => ({
+    code: series.code,
+    label: series.label,
+    name: series.name,
+    uniqueCards: series.cards.length,
+    totalCopiesInProduct: series.cards.reduce((total, card) => total + card.copiesInProduct, 0)
+  }));
+
+  const cards = cardRows.map((card): CardRecord => {
+    const cardId = formatCardId(card.series.code, card.number);
+
+    return {
+      id: cardId,
+      slug: card.slug,
+      setCode: card.series.code,
+      setLabel: card.series.label,
+      setName: card.series.name,
+      number: String(card.number).padStart(2, '0'),
+      copiesInProduct: card.copiesInProduct,
+      name: card.name,
+      cardClass: card.cardClass,
+      value: card.value,
+      type: card.type,
+      archetype: card.archetype,
+      rarity: formatRarity(card.rarity),
+      effect: card.effect
+    };
+  });
+
+  return {
+    meta: {
+      sourceFile: 'Prisma Postgres',
+      extractedAt: CATALOG_EXTRACTED_AT,
+      cardCount: cards.length,
+      notes: [
+        'Catalog content is served from Prisma Postgres.',
+        'Local JSON is only used for seed data.'
+      ]
+    },
+    sets,
+    cards
+  };
+};
+
+export const getCardsPage = async (
   page = 1,
   pageSize = DEFAULT_PAGE_SIZE,
   setCode: string | null = null
-): CardsPage => {
+): Promise<CardsPage> => {
+  const catalog = await loadCatalogFromDatabase();
   const safePageSize = clampPageSize(pageSize);
   const activeSetCode = normalizeSetCode(setCode);
   const filteredCards =
@@ -232,11 +181,11 @@ export const parseIntegerQueryValue = (
   return Math.min(Math.max(Math.trunc(numeric), minimum), maximum);
 };
 
-export const getCardsPageFromQuery = (query: {
+export const getCardsPageFromQuery = async (query: {
   page?: unknown;
   pageSize?: unknown;
   setCode?: unknown;
-}): CardsPage => {
+}): Promise<CardsPage> => {
   const page = parseIntegerQueryValue(query.page, 1, 1, Number.MAX_SAFE_INTEGER);
   const pageSize = parseIntegerQueryValue(query.pageSize, DEFAULT_PAGE_SIZE, 1, MAX_PAGE_SIZE);
   const setCode = Array.isArray(query.setCode) ? query.setCode[0] : query.setCode;

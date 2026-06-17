@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 
 import { ThemePillComponent } from '../../../shared/ui/theme-pill.component';
 import { MetricCardComponent } from '../../../shared/ui/metric-card.component';
-import type { CatalogSet } from '../models/card.model';
+import type { CatalogSet } from '@scryflemme/types';
 
 @Component({
   selector: 'app-cards-header',

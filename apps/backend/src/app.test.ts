@@ -18,8 +18,8 @@ describe('backend payloads', () => {
     });
   });
 
-  it('cards pagination returns a bounded slice with metadata', () => {
-    const payload = getCardsPage(2, 5);
+  it('cards pagination returns a bounded slice with metadata', async () => {
+    const payload = await getCardsPage(2, 5);
     const ids = payload.cards.map((card) => card.id);
 
     expect(payload.page).toBe(2);
@@ -34,8 +34,8 @@ describe('backend payloads', () => {
     expect(payload.activeSetCode).toBeNull();
   });
 
-  it('cards query parsing clamps invalid values', () => {
-    const payload = getCardsPageFromQuery({
+  it('cards query parsing clamps invalid values', async () => {
+    const payload = await getCardsPageFromQuery({
       page: '-3',
       pageSize: '100'
     });
@@ -44,8 +44,8 @@ describe('backend payloads', () => {
     expect(payload.pageSize).toBe(48);
   });
 
-  it('cards can be filtered by set code before pagination', () => {
-    const payload = getCardsPage(1, 12, 's2');
+  it('cards can be filtered by set code before pagination', async () => {
+    const payload = await getCardsPage(1, 12, 's2');
 
     expect(payload.activeSetCode).toBe('S2');
     expect(payload.total).toBe(32);

@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 
 import { CardTileComponent } from './card-tile.component';
-import type { CardRecord } from '../models/card.model';
+import type { CardRecord } from '@scryflemme/types';
 
 @Component({
   selector: 'app-cards-grid',

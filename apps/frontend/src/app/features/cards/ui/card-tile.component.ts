@@ -1,8 +1,8 @@
 import { Component, computed, input } from '@angular/core';
 
 import { ThemePillComponent } from '../../../shared/ui/theme-pill.component';
-import type { CardRecord } from '../models/card.model';
-import { formatCardValue, formatOwnedStatus, rarityTone } from '../util/card-formatters';
+import type { CardRecord } from '@scryflemme/types';
+import { formatCardValue, rarityTone } from '../util/card-formatters';
 
 @Component({
   selector: 'app-card-tile',
@@ -64,20 +64,8 @@ import { formatCardValue, formatOwnedStatus, rarityTone } from '../util/card-for
         </p>
       </div>
 
-      <div class="mt-4 flex flex-wrap gap-2">
-        <app-theme-pill [tone]="ownedClassicTone()">
-          Classic {{ formatOwnedStatus(card().ownedClassic) }}
-        </app-theme-pill>
-
-        <app-theme-pill [tone]="ownedGoldTone()">
-          Gold {{ formatOwnedStatus(card().ownedGold) }}
-        </app-theme-pill>
-      </div>
-
       <div class="mt-4 text-xs uppercase tracking-[0.24em] text-[color:var(--theme-text-muted)]">
         <span>{{ card().slug }}</span>
-        <span class="mx-2">•</span>
-        <span>{{ card().rawNumber }}</span>
       </div>
     </article>
   `
@@ -87,15 +75,5 @@ export class CardTileComponent {
 
   protected readonly rarityTone = computed(() => rarityTone(this.card().rarity));
 
-  protected readonly ownedClassicTone = computed(() =>
-    this.card().ownedClassic ? 'success' : 'neutral'
-  );
-
-  protected readonly ownedGoldTone = computed(() =>
-    this.card().ownedGold === true ? 'success' : this.card().ownedGold === false ? 'danger' : 'warning'
-  );
-
   protected readonly formatValue = computed(() => formatCardValue(this.card().value));
-
-  protected readonly formatOwnedStatus = formatOwnedStatus;
 }

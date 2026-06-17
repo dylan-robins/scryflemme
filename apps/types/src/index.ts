@@ -20,7 +20,6 @@ export interface CardRecord {
   setLabel: string;
   setName: string;
   number: string;
-  rawNumber: string;
   copiesInProduct: number;
   name: string;
   cardClass: string;
@@ -29,6 +28,18 @@ export interface CardRecord {
   archetype: string | null;
   rarity: string;
   effect: string | null;
-  ownedClassic: boolean;
-  ownedGold: boolean | null;
+}
+
+export interface CardCatalog {
+  meta: CatalogMeta;
+  sets: CatalogSet[];
+  cards: CardRecord[];
+}
+
+export interface CardsPage extends CardCatalog {
+  activeSetCode: string | null;
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
 }

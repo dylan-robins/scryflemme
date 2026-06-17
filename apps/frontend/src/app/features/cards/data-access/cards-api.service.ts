@@ -2,18 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import type { CardRecord, CatalogMeta, CatalogSet } from '../models/card.model';
-
-export interface CardsPageResponse {
-  meta: CatalogMeta;
-  sets: CatalogSet[];
-  cards: CardRecord[];
-  activeSetCode: string | null;
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
-}
+import type { CardsPage } from '@scryflemme/types';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +10,8 @@ export interface CardsPageResponse {
 export class CardsApiService {
   private readonly http = inject(HttpClient);
 
-  getCards(page: number, pageSize: number, setCode: string | null): Observable<CardsPageResponse> {
-    return this.http.get<CardsPageResponse>('/api/cards', {
+  getCards(page: number, pageSize: number, setCode: string | null): Observable<CardsPage> {
+    return this.http.get<CardsPage>('/api/cards', {
       params: {
         page,
         pageSize,

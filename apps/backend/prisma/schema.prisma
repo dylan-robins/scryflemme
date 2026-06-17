@@ -1,0 +1,82 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+model Series {
+  seriesID Int    @id @default(autoincrement())
+  code     String @unique
+  label    String
+  name     String
+  cards    Card[]
+}
+
+model Card {
+  cardID          Int       @id @default(autoincrement())
+  seriesId        Int
+  slug            String    @unique
+  number          Int
+  copiesInProduct Int
+  name            String
+  cardClass       CardClass
+  value           Int?
+  type            String?
+  archetype       String?
+  rarity          Rarity
+  effect          String?
+
+  series Series @relation(fields: [seriesId], references: [seriesID])
+
+  deckCards DeckCard[]
+}
+
+enum CardClass {
+  Esbroufe
+  Magie
+  Agilité
+  Soutien
+  Force
+  Épique
+}
+
+enum Rarity {
+  COMMON
+  RARE
+  LEGENDARY
+  SECRET
+}
+
+model User {
+  userID Int     @id @default(autoincrement())
+  email  String  @unique
+  name   String?
+
+  decks Deck[]
+}
+
+model Deck {
+  deckID Int    @id @default(autoincrement())
+  userID Int
+  name   String
+
+  user User @relation(fields: [userID], references: [userID])
+
+  deckCards DeckCard[]
+
+  @@unique([userID, name])
+}
+
+model DeckCard {
+  deckID Int
+  cardID Int
+  count  Int
+
+  deck Deck @relation(fields: [deckID], references: [deckID])
+  card Card @relation(fields: [cardID], references: [cardID])
+
+  @@id([deckID, cardID])
+}
