@@ -3,6 +3,9 @@ import express from 'express';
 
 import { getCardsPageFromQuery } from './cards.js';
 import { AuthError, authenticateRequest, type AuthenticatedUser } from './auth/logto.js';
+import type { PrismaClient } from '../generated/prisma/client.js';
+
+export type AppPrisma = Pick<PrismaClient, 'series' | 'card' | 'user'>;
 
 export const getHealthPayload = () => ({
   ok: true,
@@ -16,7 +19,7 @@ export const getHelloPayload = () => ({
 
 export const getMePayload = (user: AuthenticatedUser) => user;
 
-export const createApp = () => {
+export const createApp = (prisma: AppPrisma) => {
   const app = express();
 
   app.use(cors());
@@ -31,13 +34,13 @@ export const createApp = () => {
   });
 
   app.get('/api/cards', (request, response, next) => {
-    void getCardsPageFromQuery(request.query)
+    void getCardsPageFromQuery(request.query, prisma)
       .then((payload) => response.json(payload))
       .catch(next);
   });
 
   app.get('/api/me', (request, response, next) => {
-    void authenticateRequest(request)
+    void authenticateRequest(prisma, request)
       .then((user) => response.json(getMePayload(user)))
       .catch((error: unknown) => {
         if (error instanceof AuthError) {
